@@ -1,33 +1,60 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# ─── Build output ─────────────────────────────
+/target/
+build/
 
-### STS ###
-.apt_generated
+# ─── Spring Boot local config ─────────────────
+/src/main/resources/application-local.properties
+
+# ─── Logs ─────────────────────────────────────
+*.log
+
+# ─── Compiled class files ─────────────────────
+*.class
+
+# ─── System files ─────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Editor/IDE files ─────────────────────────
+
+## IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+## Eclipse
+.settings/
 .classpath
-.factorypath
 .project
-.settings
+
+## STS (Spring Tool Suite)
+.apt_generated
+.factorypath
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
+## NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
+## VS Code
 .vscode/
+
+# ─── Swap/temporary files ─────────────────────
+*.swp
+*.swo
+
+# ─── Maven wrapper ────────────────────────────
+.mvn/wrapper/maven-wrapper.jar
+/mvnw.cmd
+/mvnw
+
+# ─── Node/npm (si frontend va en monorepo) ────
+/node_modules/
+
+# ─── Dotenv files ─────────────────────────────
+.env
