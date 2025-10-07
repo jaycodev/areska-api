@@ -19,6 +19,8 @@ import com.areska.orderDetail.dto.request.OrderDetailUpdateRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -31,7 +33,7 @@ public class OrderDetailController {
 
     @GetMapping("/by-order/{orderId}")
     @Operation(summary = "List order details by order ID")
-    public ResponseEntity<?> byOrder(@PathVariable Integer orderId) {
+    public ResponseEntity<?> byOrder(@Min(1) @PathVariable Integer orderId) {
         List<OrderDetailResponse> details = orderDetailService.getListByOrder(orderId);
         if (details.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -41,28 +43,28 @@ public class OrderDetailController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get an order detail by ID")
-    public ResponseEntity<OrderDetailResponse> get(@PathVariable Integer id) {
+    public ResponseEntity<OrderDetailResponse> get(@Min(1) @PathVariable Integer id) {
         OrderDetailResponse detail = orderDetailService.getDetailById(id);
         return ResponseEntity.ok(detail);
     }
 
     @PostMapping
     @Operation(summary = "Create a new order detail")
-    public ResponseEntity<?> create(@RequestBody OrderDetailRequest request) {
+    public ResponseEntity<?> create(@Valid @RequestBody OrderDetailRequest request) {
         OrderDetailResponse created = orderDetailService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update an order detail by ID")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody OrderDetailUpdateRequest request) {
+    public ResponseEntity<?> update(@Min(1) @PathVariable Integer id, @Valid @RequestBody OrderDetailUpdateRequest request) {
         OrderDetailResponse updated = orderDetailService.update(id, request);
         return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete an order detail by ID")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@Min(1) @PathVariable Integer id) {
         orderDetailService.delete(id);
         return ResponseEntity.noContent().build();
     }

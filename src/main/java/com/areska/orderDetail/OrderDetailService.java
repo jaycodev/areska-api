@@ -14,8 +14,8 @@ import com.areska.orderDetail.dto.request.OrderDetailRequest;
 import com.areska.orderDetail.dto.request.OrderDetailUpdateRequest;
 import com.areska.product.Product;
 import com.areska.product.ProductRepository;
+import com.areska.shared.exception.ResourceNotFoundException;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -30,13 +30,13 @@ public class OrderDetailService {
 
     public List<OrderDetailResponse> getListByOrder(Integer orderId) {
         orderRepository.findById(orderId)
-                .orElseThrow(() -> new EntityNotFoundException("Order not found with ID: " + orderId));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
         return repository.findByOrder_OrderId(orderId).stream().map(this::map).toList();
     }
 
     public OrderDetailResponse getDetailById(Integer id) {
         return repository.findById(id).map(this::map)
-                .orElseThrow(() -> new EntityNotFoundException("Order detail not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Order detail not found with ID: " + id));
     }
 
     @Transactional
@@ -45,9 +45,9 @@ public class OrderDetailService {
             throw new IllegalArgumentException("Quantity must be >= 1");
 
         Order order = orderRepository.findById(req.getOrderId())
-                .orElseThrow(() -> new EntityNotFoundException("Order not found with ID: " + req.getOrderId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + req.getOrderId()));
         Product product = productRepository.findById(req.getProductId())
-                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + req.getProductId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + req.getProductId()));
 
         if (product.getStock() != null && product.getStock() < req.getQuantity())
             throw new IllegalArgumentException("Not enough stock for product " + product.getProductId());
@@ -66,7 +66,7 @@ public class OrderDetailService {
     @Transactional
     public OrderDetailResponse update(Integer id, OrderDetailUpdateRequest req) {
         OrderDetail d = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Order detail not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Order detail not found with ID: " + id));
 
         Integer newQty = req.getQuantity() != null ? req.getQuantity() : d.getQuantity();
         if (newQty <= 0) throw new IllegalArgumentException("Quantity must be >= 1");
@@ -77,7 +77,7 @@ public class OrderDetailService {
             // devolver stock anterior
             if (p.getStock() != null) { p.setStock(p.getStock() + d.getQuantity()); productRepository.save(p); }
             p = productRepository.findById(req.getProductId())
-                    .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + req.getProductId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + req.getProductId()));
             if (p.getStock() != null && p.getStock() < newQty)
                 throw new IllegalArgumentException("Not enough stock for product " + p.getProductId());
             if (p.getStock() != null) { p.setStock(p.getStock() - newQty); productRepository.save(p); }
@@ -104,7 +104,7 @@ public class OrderDetailService {
     @Transactional
     public void delete(Integer id) {
         OrderDetail d = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Order detail not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Order detail not found with ID: " + id));
 
         Product p = d.getProduct();
         if (p.getStock() != null) { p.setStock(p.getStock() + d.getQuantity()); productRepository.save(p); }
