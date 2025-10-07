@@ -12,7 +12,6 @@ import lombok.Data;
 @Table(name = "categories")
 @Data
 public class Category {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer categoryId;
