@@ -8,8 +8,8 @@ import com.areska.orderDetail.OrderDetail;
 import com.areska.orderDetail.OrderDetailRepository;
 import com.areska.product.Product;
 import com.areska.product.ProductRepository;
+import com.areska.shared.exception.ResourceNotFoundException;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +25,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final ProductRepository productRepository;
+//  private final UserRepository userRepository;
 
     public List<OrderResponse> getList() {
         return ((List<Order>) orderRepository.findAll())
@@ -35,38 +36,45 @@ public class OrderService {
 
     public OrderResponse getDetailById(Integer id) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Order not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + id));
         return toResponse(order);
     }
 
     @Transactional
     public OrderResponse create(OrderCreateRequest req) {
-        if (req.getItems() == null || req.getItems().isEmpty())
-            throw new IllegalArgumentException("Order must contain at least one item");
-
-        Order order = Order.builder()
+    	
+//    	if (!userRepository.existsById(req.getUserId())) {
+//          throw new ResourceNotFoundException("User not found with ID: " + req.getUserId());
+//      }
+    	
+    	Order order = orderRepository.save(Order.builder()
                 .userId(req.getUserId())
                 .status("pending")
                 .pickupMethod(req.getPickupMethod() == null ? "store" : req.getPickupMethod())
                 .total(BigDecimal.ZERO)
-                .build();
+                .build());
 
-        Order saved = orderRepository.save(order);
+        if (req.getItems() == null || req.getItems().isEmpty()) {
+            return toResponse(order);
+        }
 
         List<OrderDetail> details = req.getItems().stream().map(it -> {
             if (it.getQuantity() == null || it.getQuantity() <= 0)
                 throw new IllegalArgumentException("Quantity must be >= 1 for productId=" + it.getProductId());
 
             Product p = productRepository.findById(it.getProductId())
-                    .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + it.getProductId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + it.getProductId()));
 
             if (p.getStock() != null && p.getStock() < it.getQuantity())
                 throw new IllegalArgumentException("Not enough stock for product " + p.getProductId());
 
-            if (p.getStock() != null) { p.setStock(p.getStock() - it.getQuantity()); productRepository.save(p); }
+            if (p.getStock() != null) { 
+            	p.setStock(p.getStock() - it.getQuantity());
+            	productRepository.save(p);
+            }
 
             return OrderDetail.builder()
-                    .order(saved)
+                    .order(order)
                     .product(p)
                     .quantity(it.getQuantity())
                     .unitPrice(p.getPrice())
@@ -75,18 +83,18 @@ public class OrderService {
 
         orderDetailRepository.saveAll(details);
 
-        saved.setTotal(details.stream()
+        order.setTotal(details.stream()
                 .map(d -> d.getUnitPrice().multiply(BigDecimal.valueOf(d.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
+        orderRepository.save(order);
 
-        Order updated = orderRepository.save(saved);
-        return toResponse(updated, details);
+        return toResponse(order, details);
     }
 
     @Transactional
     public OrderResponse update(Integer id, OrderUpdateRequest req) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Order not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + id));
 
         if (req.getStatus() != null && !req.getStatus().isBlank()) order.setStatus(req.getStatus());
         return toResponse(orderRepository.save(order));
@@ -95,7 +103,7 @@ public class OrderService {
     @Transactional
     public void recalcTotal(Integer orderId) {
         Order o = orderRepository.findById(orderId)
-                .orElseThrow(() -> new EntityNotFoundException("Order not found with ID: " + orderId));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
         o.setTotal(orderDetailRepository.findByOrder_OrderId(orderId).stream()
                 .map(d -> d.getUnitPrice().multiply(BigDecimal.valueOf(d.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
