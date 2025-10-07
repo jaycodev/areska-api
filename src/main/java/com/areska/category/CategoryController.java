@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.*;
 
 import com.areska.category.dto.request.CategoryRequest;
 import com.areska.category.dto.response.CategoryResponse;
+import com.areska.shared.api.ApiSuccess;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -23,32 +25,36 @@ public class CategoryController {
 
     @GetMapping
     @Operation(summary = "List all categories")
-    public ResponseEntity<?> list() {
+    public ResponseEntity<ApiSuccess<List<CategoryResponse>>> list() {
         List<CategoryResponse> categories = categoryService.getList();
-        if (categories.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-        return ResponseEntity.ok(categories);
+        ApiSuccess<List<CategoryResponse>> response = new ApiSuccess<>(
+                categories.isEmpty() ? "No categories found" : "Categories listed successfully",
+                categories);
+
+        HttpStatus status = categories.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+        return ResponseEntity.status(status).body(response);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a category by ID")
-    public ResponseEntity<CategoryResponse> get(@PathVariable Integer id) {
+    public ResponseEntity<ApiSuccess<CategoryResponse>> get(@PathVariable Integer id) {
         CategoryResponse category = categoryService.getDetailById(id);
-        return ResponseEntity.ok(category);
+        return ResponseEntity.ok(new ApiSuccess<>("Category found", category));
     }
 
     @PostMapping
     @Operation(summary = "Create a new category")
-    public ResponseEntity<?> create(@RequestBody CategoryRequest request) {
+    public ResponseEntity<ApiSuccess<CategoryResponse>> create(@Valid @RequestBody CategoryRequest request) {
         CategoryResponse created = categoryService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiSuccess<>("Category created successfully", created));
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update a category by ID")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody CategoryRequest request) {
+    public ResponseEntity<ApiSuccess<CategoryResponse>> update(@PathVariable Integer id,
+            @Valid @RequestBody CategoryRequest request) {
         CategoryResponse updated = categoryService.update(id, request);
-        return ResponseEntity.ok(updated);
+        return ResponseEntity.ok(new ApiSuccess<>("Category updated successfully", updated));
     }
 }
