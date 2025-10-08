@@ -20,7 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "Products", description = "Operations related to products")
 public class ProductController {
-
     private final ProductService productService;
 
     @GetMapping
