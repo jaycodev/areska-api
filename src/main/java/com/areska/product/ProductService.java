@@ -16,7 +16,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProductService {
-
     private final ProductRepository productRepository;
 
     private final CategoryService categoryService;
