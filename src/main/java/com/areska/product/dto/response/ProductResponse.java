@@ -1,8 +1,5 @@
 package com.areska.product.dto.response;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -24,10 +21,12 @@ public record ProductResponse(
         LocalDateTime createdAt) {
 
     @JsonGetter("category")
-    public Map<String, Object> getCategory() {
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("id", categoryId());
-        map.put("name", categoryName());
-        return map;
+    public Category getCategory() {
+        return new Category(categoryId, categoryName);
+    }
+
+    public record Category(
+            Integer id,
+            String name) {
     }
 }

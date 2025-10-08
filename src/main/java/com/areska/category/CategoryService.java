@@ -2,8 +2,8 @@ package com.areska.category;
 
 import com.areska.category.dto.request.CategoryRequest;
 import com.areska.category.dto.response.CategoryResponse;
+import com.areska.shared.exception.ResourceNotFoundException;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +15,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CategoryService {
-    
     private final CategoryRepository categoryRepository;
 
     public List<CategoryResponse> getList() {
@@ -28,14 +27,14 @@ public class CategoryService {
 
     public CategoryResponse getDetailById(Integer id) {
         return categoryRepository.findDetailById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + id));
     }
 
     @Transactional
     public CategoryResponse create(CategoryRequest request) {
         Category category = new Category();
-        category.setName(request.getName());
-        category.setDescription(request.getDescription());
+        category.setName(request.name());
+        category.setDescription(request.description());
 
         Category saved = categoryRepository.save(category);
 
@@ -45,10 +44,10 @@ public class CategoryService {
     @Transactional
     public CategoryResponse update(Integer id, CategoryRequest request) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + id));
 
-        category.setName(request.getName());
-        category.setDescription(request.getDescription());
+        category.setName(request.name());
+        category.setDescription(request.description());
 
         Category updated = categoryRepository.save(category);
 

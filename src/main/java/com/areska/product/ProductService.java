@@ -3,8 +3,8 @@ package com.areska.product;
 import com.areska.category.CategoryService;
 import com.areska.product.dto.request.ProductRequest;
 import com.areska.product.dto.response.ProductResponse;
+import com.areska.shared.exception.ResourceNotFoundException;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +16,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProductService {
-
     private final ProductRepository productRepository;
 
     private final CategoryService categoryService;
@@ -31,20 +30,20 @@ public class ProductService {
 
     public ProductResponse getDetailById(Integer id) {
         return productRepository.findDetailById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + id));
     }
 
     @Transactional
     public ProductResponse create(ProductRequest request) {
         Product product = new Product();
-        product.setName(request.getName());
-        product.setDescription(request.getDescription());
-        product.setPrice(request.getPrice());
-        product.setStock(request.getStock());
+        product.setName(request.name());
+        product.setDescription(request.description());
+        product.setPrice(request.price());
+        product.setStock(request.stock());
 
-        product.setCategory(categoryService.findById(request.getCategoryId())
+        product.setCategory(categoryService.findById(request.categoryId())
                 .orElseThrow(
-                        () -> new EntityNotFoundException("Category not found with ID: " + request.getCategoryId())));
+                        () -> new ResourceNotFoundException("Category not found with ID: " + request.categoryId())));
 
         Product saved = productRepository.save(product);
 
@@ -54,16 +53,16 @@ public class ProductService {
     @Transactional
     public ProductResponse update(Integer id, ProductRequest request) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + id));
 
-        product.setName(request.getName());
-        product.setDescription(request.getDescription());
-        product.setPrice(request.getPrice());
-        product.setStock(request.getStock());
+        product.setName(request.name());
+        product.setDescription(request.description());
+        product.setPrice(request.price());
+        product.setStock(request.stock());
 
-        product.setCategory(categoryService.findById(request.getCategoryId())
+        product.setCategory(categoryService.findById(request.categoryId())
                 .orElseThrow(
-                        () -> new EntityNotFoundException("Category not found with ID: " + request.getCategoryId())));
+                        () -> new ResourceNotFoundException("Category not found with ID: " + request.categoryId())));
 
         Product updated = productRepository.save(product);
 

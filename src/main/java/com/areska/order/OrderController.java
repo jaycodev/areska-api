@@ -18,6 +18,8 @@ import com.areska.order.dto.response.OrderResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -40,21 +42,21 @@ public class OrderController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get an order by ID (with items)")
-    public ResponseEntity<OrderResponse> get(@PathVariable Integer id) {
+    public ResponseEntity<OrderResponse> get(@Min(1) @PathVariable Integer id) {
         OrderResponse order = orderService.getDetailById(id);
         return ResponseEntity.ok(order);
     }
 
     @PostMapping
     @Operation(summary = "Create a new order")
-    public ResponseEntity<?> create(@RequestBody OrderCreateRequest request) {
+    public ResponseEntity<?> create(@Valid @RequestBody OrderCreateRequest request) {
         OrderResponse created = orderService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update an order status method")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody OrderUpdateRequest request) {
+    public ResponseEntity<?> update(@Min(1) @PathVariable Integer id, @Valid @RequestBody OrderUpdateRequest request) {
         OrderResponse updated = orderService.update(id, request);
         return ResponseEntity.ok(updated);
     }
