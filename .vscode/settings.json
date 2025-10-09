@@ -24,5 +24,7 @@
   },
 
   "java.compile.nullAnalysis.mode": "automatic",
-  "java.configuration.updateBuildConfiguration": "interactive"
+  "java.configuration.updateBuildConfiguration": "interactive",
+
+  "java.saveActions.organizeImports": true
 }
