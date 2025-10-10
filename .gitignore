@@ -27,6 +27,7 @@ Thumbs.db
 .settings/
 .classpath
 .project
+.metadata/
 
 ## STS (Spring Tool Suite)
 .apt_generated
