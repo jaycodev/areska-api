@@ -6,18 +6,21 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import com.areska.product.dto.response.ProductResponse;
+import com.areska.product.dto.response.ProductPublicResponse;
+import com.areska.product.dto.response.ProductAdminResponse;
+import com.areska.product.model.Product;
 
 public interface ProductRepository extends CrudRepository<Product, Integer> {
     @Query("""
         SELECT 
-            p.productId AS id,
+            p.id AS id,
             p.name AS name,
-            p.description AS description,
             p.price AS price,
-            p.stock AS stock,
+            p.originalPrice AS originalPrice,
+            p.mainImage AS mainImage,
+            p.badge AS badge,
 
-            c.categoryId AS categoryId,
+            c.id AS categoryId,
             c.name AS categoryName,
 
             p.createdAt AS createdAt
@@ -25,17 +28,35 @@ public interface ProductRepository extends CrudRepository<Product, Integer> {
         JOIN p.category c
         ORDER BY p.id DESC
     """)
-    List<ProductResponse> findList();
+    List<ProductPublicResponse> findPublicList();
 
     @Query("""
         SELECT 
-            p.productId AS id,
+            p.id AS id,
             p.name AS name,
             p.description AS description,
             p.price AS price,
             p.stock AS stock,
 
-            c.categoryId AS categoryId,
+            c.id AS categoryId,
+            c.name AS categoryName,
+
+            p.createdAt AS createdAt
+        FROM Product p
+        JOIN p.category c
+        ORDER BY p.id DESC
+    """)
+    List<ProductAdminResponse> findAdminList();
+
+    @Query("""
+        SELECT 
+            p.id AS id,
+            p.name AS name,
+            p.description AS description,
+            p.price AS price,
+            p.stock AS stock,
+
+            c.id AS categoryId,
             c.name AS categoryName,
 
             p.createdAt AS createdAt
@@ -43,5 +64,5 @@ public interface ProductRepository extends CrudRepository<Product, Integer> {
         JOIN p.category c
         WHERE p.id = :id
     """)
-    Optional<ProductResponse> findDetailById(Integer id);
+    Optional<ProductAdminResponse> findDetailById(Integer id);
 }

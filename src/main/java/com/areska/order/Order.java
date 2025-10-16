@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +27,7 @@ public class Order {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer orderId;
+    private Integer id;
 
 //	Cuando se agregue User
 //  @ManyToOne(fetch = FetchType.LAZY)
@@ -48,4 +49,7 @@ public class Order {
 
     @Column(nullable = false, name = "pickup_method", columnDefinition = "VARCHAR(50) DEFAULT 'store'")
     private String pickupMethod;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }

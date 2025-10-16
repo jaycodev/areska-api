@@ -1,11 +1,8 @@
-package com.areska.product;
+package com.areska.product.model;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
-
-import com.areska.category.Category;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,30 +16,23 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "products")
+@Table(name = "product_images")
 @Data
-public class Product {
+public class ProductImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer productId;
-
-    @Column(nullable = false)
-    private String name;
-
-    @Column(columnDefinition = "TEXT")
-    private String description;
-
-    @Column(nullable = false)
-    private BigDecimal price;
-
-    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
-    private Integer stock;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @Column(nullable = false)
+    private String imageUrl;
+
+    private Integer displayOrder;
 
     @CreationTimestamp
-    @Column(insertable = false, updatable = false)
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 }

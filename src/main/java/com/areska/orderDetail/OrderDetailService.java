@@ -12,8 +12,8 @@ import com.areska.order.OrderService;
 import com.areska.order.dto.response.OrderDetailResponse;
 import com.areska.orderDetail.dto.request.OrderDetailRequest;
 import com.areska.orderDetail.dto.request.OrderDetailUpdateRequest;
-import com.areska.product.Product;
 import com.areska.product.ProductRepository;
+import com.areska.product.model.Product;
 import com.areska.shared.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class OrderDetailService {
     public List<OrderDetailResponse> getListByOrder(Integer orderId) {
         orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
-        return repository.findByOrder_OrderId(orderId).stream().map(this::map).toList();
+        return repository.findByOrder_Id(orderId).stream().map(this::map).toList();
     }
 
     public OrderDetailResponse getDetailById(Integer id) {
@@ -50,7 +50,7 @@ public class OrderDetailService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + req.getProductId()));
 
         if (product.getStock() != null && product.getStock() < req.getQuantity())
-            throw new IllegalArgumentException("Not enough stock for product " + product.getProductId());
+            throw new IllegalArgumentException("Not enough stock for product " + product.getId());
         if (product.getStock() != null) { product.setStock(product.getStock() - req.getQuantity()); productRepository.save(product); }
 
         BigDecimal unitPrice = product.getPrice();
@@ -59,7 +59,7 @@ public class OrderDetailService {
                 .order(order).product(product)
                 .quantity(req.getQuantity()).unitPrice(unitPrice).build());
 
-        orderService.recalcTotal(order.getOrderId());
+        orderService.recalcTotal(order.getId());
         return map(saved);
     }
 
@@ -73,20 +73,20 @@ public class OrderDetailService {
 
         Product p = d.getProduct();
 
-        if (req.getProductId() != null && !req.getProductId().equals(p.getProductId())) {
+        if (req.getProductId() != null && !req.getProductId().equals(p.getId())) {
             // devolver stock anterior
             if (p.getStock() != null) { p.setStock(p.getStock() + d.getQuantity()); productRepository.save(p); }
             p = productRepository.findById(req.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + req.getProductId()));
             if (p.getStock() != null && p.getStock() < newQty)
-                throw new IllegalArgumentException("Not enough stock for product " + p.getProductId());
+                throw new IllegalArgumentException("Not enough stock for product " + p.getId());
             if (p.getStock() != null) { p.setStock(p.getStock() - newQty); productRepository.save(p); }
             d.setProduct(p);
         } else if (!newQty.equals(d.getQuantity())) {
             int diff = newQty - d.getQuantity();
             if (diff > 0) {
                 if (p.getStock() != null && p.getStock() < diff)
-                    throw new IllegalArgumentException("Not enough stock for product " + p.getProductId());
+                    throw new IllegalArgumentException("Not enough stock for product " + p.getId());
                 if (p.getStock() != null) { p.setStock(p.getStock() - diff); productRepository.save(p); }
             } else if (diff < 0 && p.getStock() != null) {
                 p.setStock(p.getStock() + (-diff)); productRepository.save(p);
@@ -97,7 +97,7 @@ public class OrderDetailService {
         d.setUnitPrice(p.getPrice());
 
         OrderDetail updated = repository.save(d);
-        orderService.recalcTotal(updated.getOrder().getOrderId());
+        orderService.recalcTotal(updated.getOrder().getId());
         return map(updated);
     }
 
@@ -109,16 +109,16 @@ public class OrderDetailService {
         Product p = d.getProduct();
         if (p.getStock() != null) { p.setStock(p.getStock() + d.getQuantity()); productRepository.save(p); }
 
-        Integer orderId = d.getOrder().getOrderId();
+        Integer orderId = d.getOrder().getId();
         repository.delete(d);
         orderService.recalcTotal(orderId);
     }
 
     private OrderDetailResponse map(OrderDetail d) {
         return new OrderDetailResponse(
-                d.getDetailId(),
-                d.getOrder().getOrderId(),
-                d.getProduct().getProductId(),
+                d.getId(),
+                d.getOrder().getId(),
+                d.getProduct().getId(),
                 d.getProduct().getName(),
                 d.getQuantity(),
                 d.getUnitPrice(),
