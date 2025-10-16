@@ -36,7 +36,8 @@ public record ProductDetailResponse(
         return new Category(categoryId, categoryName);
     }
 
-    public ProductDetailResponse withImagesColorsAndSizesAndFeatures(List<ProductImageItem> images, List<ProductColorItem> colors,
+    public ProductDetailResponse withImagesColorsAndSizesAndFeatures(List<ProductImageItem> images,
+            List<ProductColorItem> colors,
             List<ProductSizeItem> sizes, List<ProductFeatureItem> features) {
         return new ProductDetailResponse(
                 id,

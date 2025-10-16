@@ -7,14 +7,13 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({ "id", "name", "price", "originalPrice", "mainImage", "badge", "category", "createdAt" })
-public record ProductPublicResponse(
+@JsonPropertyOrder({ "id", "name", "description", "price", "stock", "category", "createdAt" })
+public record ProductAdminListResponse(
         Integer id,
         String name,
+        String description,
         BigDecimal price,
-        BigDecimal originalPrice,
-        String mainImage,
-        String badge,
+        Integer stock,
 
         @JsonIgnore Integer categoryId,
         @JsonIgnore String categoryName,

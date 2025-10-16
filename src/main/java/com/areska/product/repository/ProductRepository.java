@@ -6,12 +6,30 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import com.areska.product.dto.response.ProductPublicResponse;
-import com.areska.product.dto.response.ProductAdminResponse;
+import com.areska.product.dto.response.ProductPublicListResponse;
+import com.areska.product.dto.response.ProductAdminListResponse;
 import com.areska.product.dto.response.ProductDetailResponse;
 import com.areska.product.model.Product;
 
 public interface ProductRepository extends CrudRepository<Product, Integer> {
+    @Query("""
+        SELECT 
+            p.id AS id,
+            p.name AS name,
+            p.description AS description,
+            p.price AS price,
+            p.stock AS stock,
+
+            c.id AS categoryId,
+            c.name AS categoryName,
+
+            p.createdAt AS createdAt
+        FROM Product p
+        JOIN p.category c
+        ORDER BY p.id DESC
+    """)
+    List<ProductAdminListResponse> findAdminList();
+
     @Query("""
         SELECT 
             p.id AS id,
@@ -29,25 +47,7 @@ public interface ProductRepository extends CrudRepository<Product, Integer> {
         JOIN p.category c
         ORDER BY p.id DESC
     """)
-    List<ProductPublicResponse> findPublicList();
-
-    @Query("""
-        SELECT 
-            p.id AS id,
-            p.name AS name,
-            p.description AS description,
-            p.price AS price,
-            p.stock AS stock,
-
-            c.id AS categoryId,
-            c.name AS categoryName,
-
-            p.createdAt AS createdAt
-        FROM Product p
-        JOIN p.category c
-        ORDER BY p.id DESC
-    """)
-    List<ProductAdminResponse> findAdminList();
+    List<ProductPublicListResponse> findPublicList();
 
     @Query("""
         SELECT 
