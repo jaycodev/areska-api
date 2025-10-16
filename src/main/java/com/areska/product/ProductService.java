@@ -3,8 +3,14 @@ package com.areska.product;
 import com.areska.category.CategoryService;
 import com.areska.product.dto.request.ProductRequest;
 import com.areska.product.dto.response.ProductAdminResponse;
+import com.areska.product.dto.response.ProductDetailResponse;
 import com.areska.product.dto.response.ProductPublicResponse;
 import com.areska.product.model.Product;
+import com.areska.product.repository.ProductColorRepository;
+import com.areska.product.repository.ProductFeatureRepository;
+import com.areska.product.repository.ProductImageRepository;
+import com.areska.product.repository.ProductRepository;
+import com.areska.product.repository.ProductSizeRepository;
 import com.areska.shared.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +25,10 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class ProductService {
     private final ProductRepository productRepository;
+    private final ProductImageRepository productImageRepository;
+    private final ProductColorRepository productColorRepository;
+    private final ProductSizeRepository productSizeRepository;
+    private final ProductFeatureRepository productFeatureRepository;
 
     private final CategoryService categoryService;
 
@@ -34,9 +44,15 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public ProductAdminResponse getDetailById(Integer id) {
-        return productRepository.findDetailById(id)
+    public ProductDetailResponse getDetailById(Integer id) {
+        ProductDetailResponse base = productRepository.findDetailById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + id));
+
+        return base.withImagesColorsAndSizesAndFeatures(
+                productImageRepository.findProductImageItemsByProductId(id),
+                productColorRepository.findProductColorItemsByProductId(id),
+                productSizeRepository.findProductSizeItemsByProductId(id),
+                productFeatureRepository.findProductFeatureItemsByProductId(id));
     }
 
     @Transactional

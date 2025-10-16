@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.areska.product.ProductService;
 import com.areska.product.dto.request.ProductRequest;
 import com.areska.product.dto.response.ProductAdminResponse;
+import com.areska.product.dto.response.ProductDetailResponse;
 import com.areska.product.dto.response.ProductPublicResponse;
 import com.areska.shared.api.ApiSuccess;
 
@@ -38,8 +39,8 @@ public class PublicProductController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a product by ID")
-    public ResponseEntity<ApiSuccess<ProductAdminResponse>> get(@PathVariable Integer id) {
-        ProductAdminResponse product = productPublicService.getDetailById(id);
+    public ResponseEntity<ApiSuccess<ProductDetailResponse>> get(@PathVariable Integer id) {
+        ProductDetailResponse product = productPublicService.getDetailById(id);
         return ResponseEntity.ok(new ApiSuccess<>("Product found", product));
     }
 

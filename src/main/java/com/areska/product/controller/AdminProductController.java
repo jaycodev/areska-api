@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.areska.product.ProductService;
 import com.areska.product.dto.request.ProductRequest;
 import com.areska.product.dto.response.ProductAdminResponse;
+import com.areska.product.dto.response.ProductDetailResponse;
 import com.areska.shared.api.ApiSuccess;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,8 +38,8 @@ public class AdminProductController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a product by ID")
-    public ResponseEntity<ApiSuccess<ProductAdminResponse>> get(@PathVariable Integer id) {
-        ProductAdminResponse product = productAdminService.getDetailById(id);
+    public ResponseEntity<ApiSuccess<ProductDetailResponse>> get(@PathVariable Integer id) {
+        ProductDetailResponse product = productAdminService.getDetailById(id);
         return ResponseEntity.ok(new ApiSuccess<>("Product found", product));
     }
 
