@@ -2,9 +2,9 @@ package com.areska.product;
 
 import com.areska.category.CategoryService;
 import com.areska.product.dto.request.ProductRequest;
-import com.areska.product.dto.response.ProductAdminResponse;
+import com.areska.product.dto.response.ProductAdminListResponse;
 import com.areska.product.dto.response.ProductDetailResponse;
-import com.areska.product.dto.response.ProductPublicResponse;
+import com.areska.product.dto.response.ProductPublicListResponse;
 import com.areska.product.model.Product;
 import com.areska.product.repository.ProductColorRepository;
 import com.areska.product.repository.ProductFeatureRepository;
@@ -32,11 +32,11 @@ public class ProductService {
 
     private final CategoryService categoryService;
 
-    public List<ProductAdminResponse> getAdminList() {
+    public List<ProductAdminListResponse> getAdminList() {
         return productRepository.findAdminList();
     }
 
-    public List<ProductPublicResponse> getPublicList() {
+    public List<ProductPublicListResponse> getPublicList() {
         return productRepository.findPublicList();
     }
 
@@ -56,7 +56,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductAdminResponse create(ProductRequest request) {
+    public ProductAdminListResponse create(ProductRequest request) {
         Product product = new Product();
         product.setName(request.name());
         product.setDescription(request.description());
@@ -69,11 +69,11 @@ public class ProductService {
 
         Product saved = productRepository.save(product);
 
-        return toResponse(saved);
+        return toAdminListResponse(saved);
     }
 
     @Transactional
-    public ProductAdminResponse update(Integer id, ProductRequest request) {
+    public ProductAdminListResponse update(Integer id, ProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + id));
 
@@ -88,11 +88,11 @@ public class ProductService {
 
         Product updated = productRepository.save(product);
 
-        return toResponse(updated);
+        return toAdminListResponse(updated);
     }
 
-    private ProductAdminResponse toResponse(Product product) {
-        return new ProductAdminResponse(
+    private ProductAdminListResponse toAdminListResponse(Product product) {
+        return new ProductAdminListResponse(
                 product.getId(),
                 product.getName(),
                 product.getDescription(),
