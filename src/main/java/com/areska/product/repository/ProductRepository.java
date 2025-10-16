@@ -45,7 +45,6 @@ public interface ProductRepository extends CrudRepository<Product, Integer> {
             p.createdAt AS createdAt
         FROM Product p
         JOIN p.category c
-        ORDER BY p.id DESC
     """)
     List<ProductPublicListResponse> findPublicList();
 
