@@ -24,6 +24,7 @@ VALUES (
 );
 
 INSERT INTO product_images (product_id, image_url, display_order) VALUES
+(1, '/images/products/keyboards/teclado-mecanico-rgb-1.png', 0),
 (1, '/images/products/keyboards/teclado-mecanico-rgb-2.png', 1),
 (1, '/images/products/keyboards/teclado-mecanico-rgb-3.png', 2),
 (1, '/images/products/keyboards/teclado-mecanico-rgb-4.webp', 3);
@@ -58,6 +59,7 @@ VALUES (
 );
 
 INSERT INTO product_images (product_id, image_url, display_order) VALUES
+(2, '/images/products/mice/mouse-gaming-pro-1.png', 0),
 (2, '/images/products/mice/mouse-gaming-pro-2.png', 1),
 (2, '/images/products/mice/mouse-gaming-pro-3.webp', 2);
 
@@ -83,6 +85,9 @@ VALUES (
     40
 );
 
+INSERT INTO product_images (product_id, image_url, display_order) VALUES
+(3, '/images/products/headsets/auriculares-71.png', 0);
+
 INSERT INTO product_features (product_id, feature_text, display_order) VALUES
 (3, 'Sonido envolvente 7.1', 0),
 (3, 'Micrófono con cancelación de ruido', 1),
@@ -102,6 +107,9 @@ VALUES (
     30
 );
 
+INSERT INTO product_images (product_id, image_url, display_order) VALUES
+(4, '/images/products/monitors/monitor-27-165hz.png', 0);
+
 INSERT INTO product_features (product_id, feature_text, display_order) VALUES
 (4, 'Resolución 2560x1440 (QHD)', 0),
 (4, 'Tasa de refresco 165Hz', 1),
@@ -119,6 +127,9 @@ VALUES (
     (SELECT id FROM categories WHERE slug = 'muebles'),
     25
 );
+
+INSERT INTO product_images (product_id, image_url, display_order) VALUES
+(5, '/images/products/chairs/silla-gaming-pro.png', 0);
 
 INSERT INTO product_features (product_id, feature_text, display_order) VALUES
 (5, 'Soporte lumbar ajustable', 0),
@@ -138,6 +149,9 @@ VALUES (
     80
 );
 
+INSERT INTO product_images (product_id, image_url, display_order) VALUES
+(6, '/images/products/mousepads/mousepad-xxl.png', 0);
+
 INSERT INTO product_features (product_id, feature_text, display_order) VALUES
 (6, 'Tamaño XXL: 90x40cm', 0),
 (6, 'Base de goma antideslizante', 1),
@@ -155,6 +169,9 @@ VALUES (
     (SELECT id FROM categories WHERE slug = 'streaming'),
     45
 );
+
+INSERT INTO product_images (product_id, image_url, display_order) VALUES
+(7, '/images/products/webcams/webcam-4k-streaming.png', 0);
 
 INSERT INTO product_features (product_id, feature_text, display_order) VALUES
 (7, 'Resolución 4K a 30fps', 0),
@@ -174,6 +191,9 @@ VALUES (
     35
 );
 
+INSERT INTO product_images (product_id, image_url, display_order) VALUES
+(8, '/images/products/microphones/microfono-condensador-usb.png', 0);
+
 INSERT INTO product_features (product_id, feature_text, display_order) VALUES
 (8, 'Patrón cardioide profesional', 0),
 (8, 'Conexión USB plug-and-play', 1),
@@ -190,6 +210,9 @@ VALUES (
     (SELECT id FROM categories WHERE slug = 'accesorios'),
     55
 );
+
+INSERT INTO product_images (product_id, image_url, display_order) VALUES
+(9, '/images/products/hubs/hub-usbc-7en1.png', 0);
 
 INSERT INTO product_features (product_id, feature_text, display_order) VALUES
 (9, '3 puertos USB 3.0', 0),
@@ -209,6 +232,9 @@ VALUES (
     70
 );
 
+INSERT INTO product_images (product_id, image_url, display_order) VALUES
+(10, '/images/products/leds/tira-led-rgb-3m.png', 0);
+
 INSERT INTO product_features (product_id, feature_text, display_order) VALUES
 (10, '3 metros de longitud', 0),
 (10, 'Control WiFi por app', 1),
@@ -225,6 +251,9 @@ VALUES (
     (SELECT id FROM categories WHERE slug = 'accesorios'),
     40
 );
+
+INSERT INTO product_images (product_id, image_url, display_order) VALUES
+(11, '/images/products/stands/soporte-monitor-brazo.png', 0);
 
 INSERT INTO product_features (product_id, feature_text, display_order) VALUES
 (11, 'Movimiento 360° completo', 0),
@@ -244,6 +273,9 @@ VALUES (
     (SELECT id FROM categories WHERE slug = 'accesorios'),
     50
 );
+
+INSERT INTO product_images (product_id, image_url, display_order) VALUES
+(12, '/images/products/controllers/controlador-pro-inalambrico.png', 0);
 
 INSERT INTO product_features (product_id, feature_text, display_order) VALUES
 (12, 'Conexión Bluetooth/USB-C', 0),

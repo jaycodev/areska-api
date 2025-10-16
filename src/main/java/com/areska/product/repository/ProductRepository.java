@@ -1,4 +1,4 @@
-package com.areska.product;
+package com.areska.product.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.areska.product.dto.response.ProductPublicResponse;
 import com.areska.product.dto.response.ProductAdminResponse;
+import com.areska.product.dto.response.ProductDetailResponse;
 import com.areska.product.model.Product;
 
 public interface ProductRepository extends CrudRepository<Product, Integer> {
@@ -54,15 +55,24 @@ public interface ProductRepository extends CrudRepository<Product, Integer> {
             p.name AS name,
             p.description AS description,
             p.price AS price,
+            p.originalPrice AS originalPrice,
+            p.mainImage AS mainImage,
             p.stock AS stock,
+            p.badge AS badge,
 
             c.id AS categoryId,
             c.name AS categoryName,
 
-            p.createdAt AS createdAt
+            NULL AS images,
+            NULL AS colors,
+            NULL AS sizes,
+            NULL AS features,
+
+            p.createdAt AS createdAt,
+            p.updatedAt AS updatedAt
         FROM Product p
         JOIN p.category c
         WHERE p.id = :id
     """)
-    Optional<ProductAdminResponse> findDetailById(Integer id);
+    Optional<ProductDetailResponse> findDetailById(Integer id);
 }

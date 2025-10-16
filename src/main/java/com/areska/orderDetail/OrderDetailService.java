@@ -12,8 +12,8 @@ import com.areska.order.OrderService;
 import com.areska.order.dto.response.OrderDetailResponse;
 import com.areska.orderDetail.dto.request.OrderDetailRequest;
 import com.areska.orderDetail.dto.request.OrderDetailUpdateRequest;
-import com.areska.product.ProductRepository;
 import com.areska.product.model.Product;
+import com.areska.product.repository.ProductRepository;
 import com.areska.shared.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;

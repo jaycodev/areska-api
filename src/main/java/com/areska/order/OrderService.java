@@ -6,8 +6,8 @@ import com.areska.order.dto.response.OrderDetailResponse;
 import com.areska.order.dto.response.OrderResponse;
 import com.areska.orderDetail.OrderDetail;
 import com.areska.orderDetail.OrderDetailRepository;
-import com.areska.product.ProductRepository;
 import com.areska.product.model.Product;
+import com.areska.product.repository.ProductRepository;
 import com.areska.shared.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
