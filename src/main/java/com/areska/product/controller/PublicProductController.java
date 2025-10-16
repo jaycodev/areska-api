@@ -5,10 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.areska.product.ProductService;
 import com.areska.product.dto.request.ProductRequest;
 import com.areska.product.dto.response.ProductAdminResponse;
 import com.areska.product.dto.response.ProductPublicResponse;
-import com.areska.product.service.ProductPublicService;
 import com.areska.shared.api.ApiSuccess;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,12 +22,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "Products", description = "Operations related to products")
 public class PublicProductController {
-    private final ProductPublicService productPublicService;
+    private final ProductService productPublicService;
 
     @GetMapping
     @Operation(summary = "List all products")
     public ResponseEntity<ApiSuccess<List<ProductPublicResponse>>> list() {
-        List<ProductPublicResponse> products = productPublicService.getList();
+        List<ProductPublicResponse> products = productPublicService.getPublicList();
         ApiSuccess<List<ProductPublicResponse>> response = new ApiSuccess<>(
                 products.isEmpty() ? "No products found" : "Products listed successfully",
                 products);

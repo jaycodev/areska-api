@@ -1,9 +1,9 @@
-package com.areska.product.service;
+package com.areska.product;
 
 import com.areska.category.CategoryService;
-import com.areska.product.ProductRepository;
 import com.areska.product.dto.request.ProductRequest;
 import com.areska.product.dto.response.ProductAdminResponse;
+import com.areska.product.dto.response.ProductPublicResponse;
 import com.areska.product.model.Product;
 import com.areska.shared.exception.ResourceNotFoundException;
 
@@ -12,17 +12,26 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ProductAdminService {
+public class ProductService {
     private final ProductRepository productRepository;
 
     private final CategoryService categoryService;
 
-    public List<ProductAdminResponse> getList() {
+    public List<ProductAdminResponse> getAdminList() {
         return productRepository.findAdminList();
+    }
+
+    public List<ProductPublicResponse> getPublicList() {
+        return productRepository.findPublicList();
+    }
+
+    public Optional<Product> findById(Integer id) {
+        return productRepository.findById(id);
     }
 
     public ProductAdminResponse getDetailById(Integer id) {
