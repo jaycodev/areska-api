@@ -34,6 +34,7 @@ public class CategoryService {
     public CategoryResponse create(CategoryRequest request) {
         Category category = new Category();
         category.setName(request.name());
+        category.setSlug(request.slug());
         category.setDescription(request.description());
 
         Category saved = categoryRepository.save(category);
@@ -47,6 +48,7 @@ public class CategoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + id));
 
         category.setName(request.name());
+        category.setSlug(request.slug());
         category.setDescription(request.description());
 
         Category updated = categoryRepository.save(category);
@@ -56,8 +58,10 @@ public class CategoryService {
 
     private CategoryResponse toResponse(Category category) {
         return new CategoryResponse(
-                category.getCategoryId(),
+                category.getId(),
                 category.getName(),
-                category.getDescription());
+                category.getSlug(),
+                category.getDescription(),
+                category.getCreatedAt());
     }
 }

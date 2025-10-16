@@ -45,7 +45,7 @@ public class PaymentService {
     }
     
     public List<PaymentResponse> getByOrderId(Integer orderId) {
-        List<Payment> payments = paymentRepository.findAllByOrder_OrderId(orderId);
+        List<Payment> payments = paymentRepository.findAllByOrder_Id(orderId);
         
         if (payments.isEmpty()) {
             throw new EntityNotFoundException("No se encontraron pagos para la orden ID: " + orderId);
@@ -66,8 +66,8 @@ public class PaymentService {
 
     private PaymentResponse toResponse(Payment p) {
         return new PaymentResponse(
-                p.getPaymentId(),
-                p.getOrder().getOrderId(),
+                p.getId(),
+                p.getOrder().getId(),
                 p.getMethod(),
                 p.getAmount(),
                 p.getPaymentDate()

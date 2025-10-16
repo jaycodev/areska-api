@@ -11,9 +11,11 @@ import java.util.Optional;
 public interface CategoryRepository extends CrudRepository<Category, Integer> {
     @Query("""
         SELECT 
-            c.categoryId AS id,
+            c.id AS id,
             c.name AS name,
-            c.description AS description
+            c.slug AS slug,
+            c.description AS description,
+            c.createdAt AS createdAt
         FROM Category c
         ORDER BY c.id DESC
     """)
@@ -21,9 +23,11 @@ public interface CategoryRepository extends CrudRepository<Category, Integer> {
 
     @Query("""
         SELECT 
-            c.categoryId AS id,
+            c.id AS id,
             c.name AS name,
-            c.description AS description
+            c.slug AS slug,
+            c.description AS description,
+            c.createdAt AS createdAt
         FROM Category c
         WHERE c.id = :id
     """)

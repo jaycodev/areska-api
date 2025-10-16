@@ -6,8 +6,8 @@ import com.areska.order.dto.response.OrderDetailResponse;
 import com.areska.order.dto.response.OrderResponse;
 import com.areska.orderDetail.OrderDetail;
 import com.areska.orderDetail.OrderDetailRepository;
-import com.areska.product.Product;
 import com.areska.product.ProductRepository;
+import com.areska.product.model.Product;
 import com.areska.shared.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -66,7 +66,7 @@ public class OrderService {
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + it.getProductId()));
 
             if (p.getStock() != null && p.getStock() < it.getQuantity())
-                throw new IllegalArgumentException("Not enough stock for product " + p.getProductId());
+                throw new IllegalArgumentException("Not enough stock for product " + p.getId());
 
             if (p.getStock() != null) { 
             	p.setStock(p.getStock() - it.getQuantity());
@@ -104,23 +104,23 @@ public class OrderService {
     public void recalcTotal(Integer orderId) {
         Order o = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
-        o.setTotal(orderDetailRepository.findByOrder_OrderId(orderId).stream()
+        o.setTotal(orderDetailRepository.findByOrder_Id(orderId).stream()
                 .map(d -> d.getUnitPrice().multiply(BigDecimal.valueOf(d.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
         orderRepository.save(o);
     }
 
     private OrderResponse toResponse(Order o) {
-        List<OrderDetail> details = orderDetailRepository.findByOrder_OrderId(o.getOrderId());
+        List<OrderDetail> details = orderDetailRepository.findByOrder_Id(o.getId());
         return toResponse(o, details);
     }
 
     private OrderResponse toResponse(Order o, List<OrderDetail> details) {
         List<OrderDetailResponse> items = details.stream().map(d ->
                 new OrderDetailResponse(
-                        d.getDetailId(),
-                        o.getOrderId(),
-                        d.getProduct().getProductId(),
+                        d.getId(),
+                        o.getId(),
+                        d.getProduct().getId(),
                         d.getProduct().getName(),
                         d.getQuantity(),
                         d.getUnitPrice(),
@@ -129,7 +129,7 @@ public class OrderService {
         ).toList();
 
         return new OrderResponse(
-                o.getOrderId(),
+                o.getId(),
                 o.getUserId(),
                 o.getOrderDate(),
                 o.getStatus(),

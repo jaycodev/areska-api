@@ -3,7 +3,7 @@ package com.areska.orderDetail;
 import java.math.BigDecimal;
 
 import com.areska.order.Order;
-import com.areska.product.Product;
+import com.areska.product.model.Product;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,10 +15,9 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class OrderDetail {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer detailId;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)

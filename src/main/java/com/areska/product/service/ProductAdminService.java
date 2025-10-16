@@ -1,8 +1,10 @@
-package com.areska.product;
+package com.areska.product.service;
 
 import com.areska.category.CategoryService;
+import com.areska.product.ProductRepository;
 import com.areska.product.dto.request.ProductRequest;
-import com.areska.product.dto.response.ProductResponse;
+import com.areska.product.dto.response.ProductAdminResponse;
+import com.areska.product.model.Product;
 import com.areska.shared.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -10,31 +12,26 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ProductService {
+public class ProductAdminService {
     private final ProductRepository productRepository;
 
     private final CategoryService categoryService;
 
-    public List<ProductResponse> getList() {
-        return productRepository.findList();
+    public List<ProductAdminResponse> getList() {
+        return productRepository.findAdminList();
     }
 
-    public Optional<Product> findById(Integer id) {
-        return productRepository.findById(id);
-    }
-
-    public ProductResponse getDetailById(Integer id) {
+    public ProductAdminResponse getDetailById(Integer id) {
         return productRepository.findDetailById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + id));
     }
 
     @Transactional
-    public ProductResponse create(ProductRequest request) {
+    public ProductAdminResponse create(ProductRequest request) {
         Product product = new Product();
         product.setName(request.name());
         product.setDescription(request.description());
@@ -51,7 +48,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponse update(Integer id, ProductRequest request) {
+    public ProductAdminResponse update(Integer id, ProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + id));
 
@@ -69,14 +66,14 @@ public class ProductService {
         return toResponse(updated);
     }
 
-    private ProductResponse toResponse(Product product) {
-        return new ProductResponse(
-                product.getProductId(),
+    private ProductAdminResponse toResponse(Product product) {
+        return new ProductAdminResponse(
+                product.getId(),
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
                 product.getStock(),
-                product.getCategory().getCategoryId(),
+                product.getCategory().getId(),
                 product.getCategory().getName(),
                 product.getCreatedAt());
     }

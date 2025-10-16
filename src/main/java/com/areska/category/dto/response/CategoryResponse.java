@@ -1,7 +1,11 @@
 package com.areska.category.dto.response;
 
+import java.time.LocalDateTime;
+
 public record CategoryResponse(
     Integer id,
     String name,
-    String description
+    String slug,
+    String description,
+    LocalDateTime createdAt
 ) {}

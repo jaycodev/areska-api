@@ -2,6 +2,8 @@ package com.areska.user;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -17,10 +19,9 @@ import lombok.Data;
 @Data
 @Table(name = "users")
 public class User {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer userId;
+	private Integer id;
 	
 	@Column(nullable = false)
 	private String firstName;
@@ -40,6 +41,7 @@ public class User {
 	
 	private String address;
 	
-	@Column(insertable = false, updatable = false)
-	private LocalDateTime createdAt;
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 }

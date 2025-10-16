@@ -28,10 +28,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Payment {
-
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer paymentId;
+    private Integer id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
  	@JoinColumn(name = "order_id", nullable = false)
