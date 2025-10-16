@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.areska.product.ProductService;
 import com.areska.product.dto.request.ProductRequest;
 import com.areska.product.dto.response.ProductAdminResponse;
-import com.areska.product.service.ProductAdminService;
 import com.areska.shared.api.ApiSuccess;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,12 +21,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "Products", description = "Operations related to products")
 public class AdminProductController {
-    private final ProductAdminService productAdminService;
+    private final ProductService productAdminService;
 
     @GetMapping
     @Operation(summary = "List all products")
     public ResponseEntity<ApiSuccess<List<ProductAdminResponse>>> list() {
-        List<ProductAdminResponse> products = productAdminService.getList();
+        List<ProductAdminResponse> products = productAdminService.getAdminList();
         ApiSuccess<List<ProductAdminResponse>> response = new ApiSuccess<>(
                 products.isEmpty() ? "No products found" : "Products listed successfully",
                 products);
